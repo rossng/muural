@@ -1,5 +1,11 @@
+import { Wall } from './Wall';
+
 function App() {
-  return <>Hello, world.</>;
+  return (
+    <div style={{ width: '100vw', height: '100vh' }}>
+      <Wall />
+    </div>
+  );
 }
 
 export default App;
