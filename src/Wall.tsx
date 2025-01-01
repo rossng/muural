@@ -1,11 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import {
-  Brick,
-  BRICK_HEIGHT,
-  BRICK_WIDTH,
-  calculateBricksForContainer,
-  STRETCHER_BOND,
-} from './Bond';
+import { Brick, calculateBricksForContainer, FLEMISH_BOND, WAAL } from './Bond';
 
 export const Wall: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -19,7 +13,7 @@ export const Wall: React.FC = () => {
       const containerHeight = containerRef.current.clientHeight;
 
       const allBricks = calculateBricksForContainer(
-        STRETCHER_BOND,
+        FLEMISH_BOND(WAAL),
         containerWidth,
         containerHeight,
       );
@@ -51,19 +45,31 @@ export const Wall: React.FC = () => {
         backgroundColor: '#8B8B8B',
       }}
     >
-      {bricks.map((brick) => (
+      {bricks.map((brick, i) => (
         <div
-          key={brick.id}
+          key={i}
           style={{
             position: 'absolute',
             left: brick.x,
             top: brick.y,
-            width: BRICK_WIDTH,
-            height: BRICK_HEIGHT,
+            width: brick.width,
+            height: brick.height,
             border: 'none',
             backgroundColor: '#c75d4d',
+            textAlign: 'center',
           }}
-        />
+        >
+          <div
+            style={{
+              color: '#ccc',
+              fontFamily: 'sans-serif',
+              fontSize: '10px',
+              marginTop: '10px',
+            }}
+          >
+            {brick.width}
+          </div>
+        </div>
       ))}
     </div>
   );
