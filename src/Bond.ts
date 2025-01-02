@@ -1,4 +1,5 @@
-import { courseToBricks, Grid, makeCourse } from './Bond2';
+import { courseToBricks, Grid } from './Bond2';
+import { bricksLogicalWidth, makeFixedCourse, makeReferenceCourse } from './Bond3';
 
 export interface Brick {
   x: number;
@@ -101,7 +102,7 @@ export const FLEMISH_BOND = (brick: BrickDefinition): Bond => ({
       ],
     },
     {
-      offsetFraction: 6 / 7,
+      offsetFraction: 3 / 4,
       bricks: [
         { width: splitBrick(brick, 1 / 2), definition: brick },
         { width: brick.width, definition: brick },
@@ -115,9 +116,14 @@ export const calculateBricksForContainer = (bond: Bond, width: number, height: n
 
   const allBricks: Brick[] = [];
 
-  for (let courseIndex = 0; courseIndex < coursesCount; courseIndex++) {
+  const referenceCourse = makeReferenceCourse(bond.courses[0], width, GRID);
+  const referenceCourseWidth = bricksLogicalWidth(referenceCourse);
+  const referenceCourseBricks = courseToBricks(width, 0, referenceCourse);
+  allBricks.push(...referenceCourseBricks);
+
+  for (let courseIndex = 1; courseIndex < coursesCount; courseIndex++) {
     const courseBond = bond.courses[courseIndex % bond.courses.length];
-    const courseBricks = makeCourse(courseBond, width, GRID);
+    const courseBricks = makeFixedCourse(courseBond, referenceCourseWidth);
     const bricks = courseToBricks(width, courseIndex * GRID.courseHeight, courseBricks);
     allBricks.push(...bricks);
   }
