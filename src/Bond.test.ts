@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
-import { measureSplit, splitBrick, WAAL } from './Bond';
+import { calculateCut, cutBrick } from './Brick';
+import { WAAL } from './data/Bricks';
 
-describe('splitBrick', () => {
+describe('cutBrick', () => {
   test.each([
     [2, 210 * 2 + 10],
     [1.5, 210 + 10 + 100],
@@ -11,12 +12,12 @@ describe('splitBrick', () => {
     [0.5, 100],
     [1 / 3, (210 - 20) / 3],
   ])('a %f brick has length %f', (coeff, expected) => {
-    expect(splitBrick(WAAL, coeff)).toBe(expected);
+    expect(cutBrick(WAAL, coeff).width).toBe(expected);
   });
 });
 
-describe('measureSplit', () => {
+describe('calculateCut', () => {
   test.each([[210, 1]])('a %f brick is split %f', (width, result) => {
-    expect(measureSplit(WAAL, width)).toBe(result);
+    expect(calculateCut(WAAL, width)).toBe(result);
   });
 });

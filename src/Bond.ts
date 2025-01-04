@@ -1,24 +1,18 @@
-import { courseToBricks, Grid } from './Bond2';
-import { bricksLogicalWidth, makeFixedCourse, makeReferenceCourse } from './Bond3';
+import { List } from 'immutable';
+import { BaseBrick, calculateCut, cutBrick, CutBrick, totalLogicalWidth } from './Brick';
+import { mod } from './Util';
+import { WAAL } from './data/Bricks';
 
-export interface Brick {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+export interface Grid {
+  courseHeight: number;
+  baseBrick: BaseBrick;
+  minHeadJointWidth: number;
 }
-
-export const WAAL: BrickDefinition = {
-  colour: 'red',
-  width: 210,
-  height: 50,
-  expectedHeadJointWidth: 10,
-};
 
 export const GRID: Grid = {
   minHeadJointWidth: 10,
   courseHeight: 62.5,
-  baseBrickDefinition: WAAL,
+  baseBrick: WAAL,
 };
 
 export interface Bond {
@@ -27,106 +21,107 @@ export interface Bond {
 
 export interface BondCourse {
   offsetFraction?: number;
-  bricks: BrickVariant[];
+  bricks: CutBrick[];
 }
 
-export interface BrickVariant {
-  width: number;
-  definition: BrickDefinition;
-}
+/** Fill a course from scratch with the maximum number of bricks. */
+export function makeReferenceCourse(bond: BondCourse, width: number, grid: Grid): List<CutBrick> {
+  let bricks: List<CutBrick> = List([]);
 
-export interface BrickDefinition {
-  colour: string;
-  width: number;
-  height: number;
-  expectedHeadJointWidth: number;
-}
+  // Insert whole bricks that make up the offset
+  let offsetLogicalWidth = 0;
+  let offsetBrickCount = 0;
+  while (true) {
+    const brick = bond.bricks[mod(bond.bricks.length - ++offsetBrickCount, bond.bricks.length)];
+    const brickLogicalWidth = calculateCut(brick.definition, brick.width)!;
 
-export function asSimpleFraction(n: number): [number, number] | undefined {
-  for (let numerator = 1; numerator < 10; numerator++) {
-    for (let denominator = 1; denominator < 10; denominator++) {
-      if (Math.abs(numerator / denominator - n) < 1e-6) {
-        return [numerator, denominator];
-      }
+    if (offsetLogicalWidth + brickLogicalWidth > (bond.offsetFraction ?? 0)) {
+      break;
     }
-  }
-}
 
-/** Coeff must be a simple fraction */
-export function splitBrick(brick: BrickDefinition, coeff: number): number {
-  const fraction = asSimpleFraction(coeff);
-
-  if (!fraction) {
-    throw new Error('Multiplier must be a simple fraction');
+    offsetLogicalWidth += brickLogicalWidth;
+    bricks = bricks.push(brick);
   }
 
-  const [numerator, denominator] = fraction;
+  // Insert a partial brick to fill the remaining offset
+  if (offsetLogicalWidth < (bond.offsetFraction ?? 0)) {
+    const brick = bond.bricks[mod(bond.bricks.length - offsetBrickCount, bond.bricks.length)];
 
-  const headJointsWidth = (denominator - 1) * brick.expectedHeadJointWidth;
-  const eachPieceWidth = (brick.width - headJointsWidth) / denominator;
+    bricks = bricks.push(cutBrick(brick.definition, bond.offsetFraction! - offsetLogicalWidth));
+  }
 
-  return eachPieceWidth * numerator + brick.expectedHeadJointWidth * (numerator - 1);
-}
+  bricks = bricks.reverse();
 
-export function measureSplit(brick: BrickDefinition, width: number): number | undefined {
-  for (let numerator = 1; numerator < 10; numerator++) {
-    for (let denominator = 1; denominator < 10; denominator++) {
-      const splitWidth = splitBrick(brick, numerator / denominator);
-      if (Math.abs(splitWidth - width) < 1e-6) {
-        return numerator / denominator;
-      }
+  function minimumLength(bricks: List<CutBrick>): number {
+    return (
+      bricks.map((brick) => brick.width).reduce((a, b) => a + b, 0) +
+      (bricks.count() - 1) * grid.minHeadJointWidth
+    );
+  }
+
+  // Insert the maximum number of bricks that fit in the remaining space
+  let brickCount = 0;
+  while (true) {
+    const brick = bond.bricks[mod(brickCount++, bond.bricks.length)];
+
+    if (minimumLength(bricks) + brick.width + grid.minHeadJointWidth > width) {
+      break;
     }
+
+    bricks = bricks.push(brick);
   }
+
+  return bricks;
 }
 
-export const STRETCHER_BOND = (brick: BrickDefinition) => ({
-  courses: [
-    {
-      offsetFraction: 0,
-      bricks: [{ width: brick.width, definition: brick }],
-    },
-    {
-      offsetFraction: 0.5,
-      bricks: [{ width: brick.width, definition: brick }],
-    },
-  ],
-});
+/** Fill a course with bricks until the specified logical width is reached. */
+export function makeFixedCourse(bond: BondCourse, logicalWidth: number): List<CutBrick> {
+  let bricks: List<CutBrick> = List([]);
 
-export const FLEMISH_BOND = (brick: BrickDefinition): Bond => ({
-  courses: [
-    {
-      offsetFraction: 0,
-      bricks: [
-        { width: splitBrick(brick, 1 / 2), definition: brick },
-        { width: brick.width, definition: brick },
-      ],
-    },
-    {
-      offsetFraction: 3 / 4,
-      bricks: [
-        { width: splitBrick(brick, 1 / 2), definition: brick },
-        { width: brick.width, definition: brick },
-      ],
-    },
-  ],
-});
+  // Insert whole bricks that make up the offset
+  let offsetLogicalWidth = 0;
+  let offsetBrickCount = 0;
+  while (true) {
+    const brick = bond.bricks[mod(bond.bricks.length - ++offsetBrickCount, bond.bricks.length)];
+    const brickLogicalWidth = calculateCut(brick.definition, brick.width)!;
 
-export const calculateBricksForContainer = (bond: Bond, width: number, height: number): Brick[] => {
-  const coursesCount = Math.ceil(height / GRID.courseHeight);
+    if (offsetLogicalWidth + brickLogicalWidth > (bond.offsetFraction ?? 0)) {
+      break;
+    }
 
-  const allBricks: Brick[] = [];
-
-  const referenceCourse = makeReferenceCourse(bond.courses[0], width, GRID);
-  const referenceCourseWidth = bricksLogicalWidth(referenceCourse);
-  const referenceCourseBricks = courseToBricks(width, 0, referenceCourse);
-  allBricks.push(...referenceCourseBricks);
-
-  for (let courseIndex = 1; courseIndex < coursesCount; courseIndex++) {
-    const courseBond = bond.courses[courseIndex % bond.courses.length];
-    const courseBricks = makeFixedCourse(courseBond, referenceCourseWidth);
-    const bricks = courseToBricks(width, courseIndex * GRID.courseHeight, courseBricks);
-    allBricks.push(...bricks);
+    offsetLogicalWidth += brickLogicalWidth;
+    bricks = bricks.push(brick);
   }
 
-  return allBricks;
-};
+  // Insert a partial brick to fill the remaining offset
+  if (offsetLogicalWidth < (bond.offsetFraction ?? 0)) {
+    const brick = bond.bricks[mod(bond.bricks.length - offsetBrickCount, bond.bricks.length)];
+
+    bricks = bricks.push(cutBrick(brick.definition, bond.offsetFraction! - offsetLogicalWidth));
+  }
+
+  bricks = bricks.reverse();
+
+  // Insert bricks until they exceed the logical width
+  let brickCount = 0;
+  while (true) {
+    const brick = bond.bricks[mod(brickCount++, bond.bricks.length)];
+    const brickLogicalWidth = calculateCut(brick.definition, brick.width)!;
+
+    if (totalLogicalWidth(bricks) + brickLogicalWidth > logicalWidth) {
+      break;
+    }
+
+    bricks = bricks.push(brick);
+  }
+
+  // Fill up the remaining logical space with a partial brick
+  const remainingLogicalWidth = logicalWidth - totalLogicalWidth(bricks);
+  if (remainingLogicalWidth > 0) {
+    const brick = bond.bricks[mod(brickCount++, bond.bricks.length)];
+
+    bricks = bricks.push(cutBrick(brick.definition, remainingLogicalWidth));
+  }
+
+  return bricks;
+}
