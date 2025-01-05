@@ -53,3 +53,25 @@ export function loadStoredSettings(): Settings | null {
     return null;
   }
 }
+
+export function settingsToShareUrl(settings: Settings): string {
+  const baseUrl = window.location.origin + window.location.pathname;
+  const encoded = encodeURIComponent(btoa(JSON.stringify(settings)));
+  return `${baseUrl}?share=${encoded}&v=1`;
+}
+
+export function parseShareUrl(url: string): Settings | null {
+  const params = new URLSearchParams(url);
+  const share = params.get('share');
+  const version = params.get('v');
+
+  if (!share || version !== '1') return null;
+
+  try {
+    const decoded = atob(decodeURIComponent(share));
+    const settings = JSON.parse(decoded) as Settings;
+    return settings;
+  } catch {
+    return null;
+  }
+}

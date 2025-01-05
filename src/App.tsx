@@ -21,6 +21,7 @@ import {
 import { SettingsProvider } from './contexts/SettingsProvider';
 import { useMouseActivity } from './hooks/useMouseActivity';
 import { Settings } from './Settings';
+import { Share } from './Share';
 import { Wall } from './Wall';
 
 function App() {
@@ -117,6 +118,8 @@ function App() {
           >
             {!document.fullscreenElement ? <LucideMaximize2 /> : <LucideMinimize2 />}
           </IconButton>
+
+          <Share />
 
           <PopoverRoot
             positioning={{ placement: 'top' }}
