@@ -96,6 +96,19 @@ export const HEADER_BOND = (brick: BaseBrick): Bond => ({
   ],
 });
 
+export const MONK_BOND = (brick: BaseBrick): Bond => ({
+  courses: [
+    {
+      offsetFraction: 0,
+      bricks: [cutBrick(brick, 1 / 2), wholeBrick(brick), wholeBrick(brick)],
+    },
+    {
+      offsetFraction: 5 / 4,
+      bricks: [cutBrick(brick, 1 / 2), wholeBrick(brick), wholeBrick(brick)],
+    },
+  ],
+});
+
 export const BOND_TYPES = {
   ['Flemish']: FLEMISH_BOND,
   ['Stretcher']: STRETCHER_BOND,
@@ -104,6 +117,7 @@ export const BOND_TYPES = {
   ['English Garden Wall']: ENGLISH_GARDEN_WALL_BOND,
   ['Sussex/Flemish Garden Wall']: SUSSEX_BOND,
   ['Header']: HEADER_BOND,
+  ['Monk']: MONK_BOND,
 };
 
 export type BondType = keyof typeof BOND_TYPES;
