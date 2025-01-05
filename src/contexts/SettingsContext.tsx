@@ -10,6 +10,7 @@ export interface Settings {
   minHeadJointWidth: number;
   brick: BaseBrick;
   mortarColour: string;
+  brickShadow: boolean;
 }
 
 export const DEFAULT_SETTINGS: () => Settings = () => ({
@@ -20,6 +21,7 @@ export const DEFAULT_SETTINGS: () => Settings = () => ({
   minHeadJointWidth: 10,
   brick: WAAL,
   mortarColour: '#ccc',
+  brickShadow: false,
 });
 
 interface SettingsContextType {
@@ -36,4 +38,17 @@ export function useSettings() {
     throw new Error('useSettings must be used within a SettingsProvider');
   }
   return context;
+}
+
+const SETTINGS_STORAGE_KEY = 'muural-settings';
+
+export function loadStoredSettings(): Settings | null {
+  const stored = localStorage.getItem(SETTINGS_STORAGE_KEY);
+  if (!stored) return null;
+
+  try {
+    return JSON.parse(stored) as Settings;
+  } catch {
+    return null;
+  }
 }

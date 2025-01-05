@@ -1,8 +1,17 @@
-import { useState } from 'react';
-import { DEFAULT_SETTINGS, Settings, SettingsContext } from './SettingsContext';
+import { useEffect, useState } from 'react';
+import { DEFAULT_SETTINGS, Settings, SettingsContext, loadStoredSettings } from './SettingsContext';
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
-  const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS());
+  const [settings, setSettings] = useState<Settings>(() => {
+    // Load settings from localStorage on initial render
+    const stored = loadStoredSettings();
+    return stored ?? DEFAULT_SETTINGS();
+  });
+
+  // Save settings to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('muural-settings', JSON.stringify(settings));
+  }, [settings]);
 
   const updateSettings = (newSettings: Partial<Settings>) => {
     setSettings((current) => ({

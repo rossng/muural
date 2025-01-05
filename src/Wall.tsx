@@ -1,4 +1,5 @@
 import { Settings, useSettings } from '@/contexts/SettingsContext';
+import { parseColor } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 import { Bond, Grid, makeFixedCourse, makeReferenceCourse } from './Bond';
 import { BaseBrick, totalLogicalWidth } from './Brick';
@@ -40,6 +41,11 @@ export const Wall: React.FC = () => {
     };
   }, [settings, settings.bond, settings.brick]);
 
+  const shadowColour = parseColor(settings.mortarColour)
+    .toFormat('hsla')
+    .withChannelValue('lightness', 50)
+    .toString('rgba');
+
   return (
     <div
       ref={containerRef}
@@ -63,6 +69,11 @@ export const Wall: React.FC = () => {
             border: 'none',
             backgroundColor: brick.colour,
             textAlign: 'center',
+            boxShadow: settings.brickShadow
+              ? `2px 1px 1px ${shadowColour},
+                 1px 2px 1px ${shadowColour},
+                 3px 3px 1px ${shadowColour}`
+              : 'none',
           }}
         />
       ))}

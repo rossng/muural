@@ -1,6 +1,7 @@
 import { Field } from '@/components/ui/field';
 import { NumberInputField, NumberInputRoot } from '@/components/ui/number-input';
 import { Radio, RadioGroup } from '@/components/ui/radio';
+import { Switch } from '@/components/ui/switch';
 import { useSettings } from '@/contexts/SettingsContext';
 import { HStack, parseColor, VStack } from '@chakra-ui/react';
 import { Button } from './components/ui/button';
@@ -20,7 +21,7 @@ export function Settings() {
   const { settings, updateSettings, resetSettings } = useSettings();
 
   return (
-    <VStack align="stretch" spaceY={4}>
+    <VStack align="stretch" maxHeight="50vh" overflowY="auto">
       <Field label="Bond Type">
         <RadioGroup
           value={settings.bond}
@@ -141,6 +142,12 @@ export function Settings() {
             <ColorPickerSliders />
           </ColorPickerContent>
         </ColorPickerRoot>
+      </Field>
+      <Field label="Brick Shadow">
+        <Switch
+          checked={settings.brickShadow}
+          onCheckedChange={({ checked }) => updateSettings({ brickShadow: checked })}
+        />
       </Field>
       <Button onClick={resetSettings} size="2xs">
         Reset
