@@ -151,6 +151,71 @@ export const FLEMISH_STRETCHER_BOND = (brick: BaseBrick): Bond => ({
   ],
 });
 
+export const FLEMISH_DIAGONAL_BOND = (brick: BaseBrick): Bond => {
+  const flemish = (brick: BaseBrick) => [
+    {
+      offsetFraction: 1 / 4,
+      bricks: [
+        cutBrick(brick, 1 / 2),
+        cutBrick(brick, 1 / 2),
+        cutBrick(brick, 1 / 2),
+        wholeBrick(brick),
+        cutBrick(brick, 1 / 2),
+        cutBrick(brick, 1 / 2),
+        cutBrick(brick, 1 / 2),
+        cutBrick(brick, 1 / 2),
+        wholeBrick(brick),
+      ],
+    },
+    {
+      offsetFraction: 2,
+      bricks: [
+        wholeBrick(brick),
+        cutBrick(brick, 1 / 2),
+        cutBrick(brick, 1 / 2),
+        cutBrick(brick, 1 / 2),
+      ],
+    },
+    {
+      offsetFraction: 3 / 4,
+      bricks: [
+        wholeBrick(brick),
+        cutBrick(brick, 1 / 2),
+        cutBrick(brick, 1 / 2),
+        cutBrick(brick, 1 / 2),
+      ],
+    },
+    {
+      offsetFraction: 1 / 2,
+      bricks: [
+        wholeBrick(brick),
+        cutBrick(brick, 1 / 2),
+        cutBrick(brick, 1 / 2),
+        cutBrick(brick, 1 / 2),
+        wholeBrick(brick),
+        cutBrick(brick, 1 / 2),
+        cutBrick(brick, 1 / 2),
+        cutBrick(brick, 1 / 2),
+        cutBrick(brick, 1 / 2),
+      ],
+    },
+  ];
+  return {
+    courses: [
+      {
+        offsetFraction: 1,
+        bricks: [cutBrick(brick, 1 / 2), wholeBrick(brick), wholeBrick(brick)],
+      },
+      ...flemish(brick),
+      {
+        offsetFraction: 1 / 4,
+        bricks: [wholeBrick(brick), wholeBrick(brick), cutBrick(brick, 1 / 2)],
+      },
+      ...flemish(brick).reverse(),
+    ],
+  };
+};
+
 export const BOND_TYPES = {
   ['Flemish']: FLEMISH_BOND,
   ['Stretcher']: STRETCHER_BOND,
@@ -162,6 +227,7 @@ export const BOND_TYPES = {
   ['Monk']: MONK_BOND,
   ['English Cross/Dutch']: ENGLISH_CROSS_BOND,
   ['Flemish Stretcher']: FLEMISH_STRETCHER_BOND,
+  ['Flemish Diagonal']: FLEMISH_DIAGONAL_BOND,
 };
 
 export type BondType = keyof typeof BOND_TYPES;
