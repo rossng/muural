@@ -48,7 +48,7 @@ export const Wall: React.FC = () => {
         height: '100%',
         position: 'relative',
         overflow: 'hidden',
-        backgroundColor: '#8B8B8B',
+        backgroundColor: settings.mortarColour,
       }}
     >
       {bricks.map((brick, i) => (
@@ -61,13 +61,13 @@ export const Wall: React.FC = () => {
             width: brick.width,
             height: brick.height,
             border: 'none',
-            backgroundColor: '#c75d4d',
+            backgroundColor: brick.colour,
             textAlign: 'center',
           }}
         >
           <div
             style={{
-              color: '#ccc',
+              color: '#fff',
               fontFamily: 'sans-serif',
               fontSize: '10px',
               marginTop: '10px',

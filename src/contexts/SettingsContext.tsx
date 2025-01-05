@@ -9,6 +9,7 @@ export interface Settings {
   bond: 'flemish' | 'stretcher';
   minHeadJointWidth: number;
   brick: BaseBrick;
+  mortarColour: string;
 }
 
 export const DEFAULT_SETTINGS: () => Settings = () => ({
@@ -18,6 +19,7 @@ export const DEFAULT_SETTINGS: () => Settings = () => ({
   bond: 'flemish',
   minHeadJointWidth: 10,
   brick: WAAL,
+  mortarColour: '#ccc',
 });
 
 interface SettingsContextType {

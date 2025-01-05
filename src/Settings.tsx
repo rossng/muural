@@ -2,8 +2,19 @@ import { Field } from '@/components/ui/field';
 import { NumberInputField, NumberInputRoot } from '@/components/ui/number-input';
 import { Radio, RadioGroup } from '@/components/ui/radio';
 import { useSettings } from '@/contexts/SettingsContext';
-import { HStack, VStack } from '@chakra-ui/react';
+import { HStack, parseColor, VStack } from '@chakra-ui/react';
 import { Button } from './components/ui/button';
+import {
+  ColorPickerArea,
+  ColorPickerContent,
+  ColorPickerControl,
+  ColorPickerEyeDropper,
+  ColorPickerInput,
+  ColorPickerLabel,
+  ColorPickerRoot,
+  ColorPickerSliders,
+  ColorPickerTrigger,
+} from './components/ui/color-picker';
 
 export function Settings() {
   const { settings, updateSettings, resetSettings } = useSettings();
@@ -85,6 +96,51 @@ export function Settings() {
         >
           <NumberInputField />
         </NumberInputRoot>
+      </Field>
+      <Field label="Brick Colour">
+        <ColorPickerRoot
+          value={parseColor(settings.brick.colour)}
+          onValueChange={(value) =>
+            updateSettings({
+              brick: {
+                ...settings.brick,
+                colour: value.valueAsString,
+              },
+            })
+          }
+        >
+          <ColorPickerLabel />
+          <ColorPickerControl>
+            <ColorPickerInput />
+            <ColorPickerTrigger />
+          </ColorPickerControl>
+          <ColorPickerContent>
+            <ColorPickerArea />
+            <ColorPickerEyeDropper />
+            <ColorPickerSliders />
+          </ColorPickerContent>
+        </ColorPickerRoot>
+      </Field>
+      <Field label="Mortar Colour">
+        <ColorPickerRoot
+          value={parseColor(settings.mortarColour)}
+          onValueChange={(value) =>
+            updateSettings({
+              mortarColour: value.valueAsString,
+            })
+          }
+        >
+          <ColorPickerLabel />
+          <ColorPickerControl>
+            <ColorPickerInput />
+            <ColorPickerTrigger />
+          </ColorPickerControl>
+          <ColorPickerContent>
+            <ColorPickerArea />
+            <ColorPickerEyeDropper />
+            <ColorPickerSliders />
+          </ColorPickerContent>
+        </ColorPickerRoot>
       </Field>
       <Button onClick={resetSettings} size="2xs">
         Reset

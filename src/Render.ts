@@ -6,6 +6,7 @@ export interface DrawableBrick {
   y: number;
   width: number;
   height: number;
+  colour: string;
 }
 
 export function courseToDrawable(
@@ -26,6 +27,7 @@ export function courseToDrawable(
       height: brick.definition.height,
       x: offset,
       y: heightOffset,
+      colour: brick.definition.colour,
     });
     offset += brick.width + headJointWidth;
   }

@@ -30,7 +30,7 @@ function App() {
             opacity={isMouseActive ? 1 : 0}
             transition="opacity 0.3s ease-in-out"
           >
-            <IconButton aria-label="Settings" rounded="full" size="lg" shadow="lg">
+            <IconButton as="div" aria-label="Settings" rounded="full" size="lg" shadow="lg">
               <LucideSettings />
             </IconButton>
           </PopoverTrigger>
