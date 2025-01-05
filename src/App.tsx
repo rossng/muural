@@ -1,5 +1,6 @@
-import { Box, Heading, IconButton } from '@chakra-ui/react';
-import { LucideSettings } from 'lucide-react';
+import { Box, Heading, HStack, IconButton } from '@chakra-ui/react';
+import { LucideMaximize2, LucideMinimize2, LucideSettings } from 'lucide-react';
+import { useEffect } from 'react';
 import {
   PopoverBody,
   PopoverContent,
@@ -15,6 +16,20 @@ import { Wall } from './Wall';
 function App() {
   const isMouseActive = useMouseActivity();
 
+  useEffect(() => {
+    document.onfullscreenchange = () => {
+      if (!document.fullscreenElement) {
+        document.body.style.cursor = 'default';
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (document.fullscreenElement) {
+      document.body.style.cursor = isMouseActive ? 'default' : 'none';
+    }
+  }, [isMouseActive]);
+
   return (
     <SettingsProvider>
       <Box width="100%" height="100%">
@@ -22,27 +37,52 @@ function App() {
           <Wall />
         </Box>
 
-        <PopoverRoot positioning={{ placement: 'top' }}>
-          <PopoverTrigger
-            position="absolute"
-            bottom="4"
-            right="4"
-            opacity={isMouseActive ? 1 : 0}
-            transition="opacity 0.3s ease-in-out"
+        <HStack
+          position="absolute"
+          bottom="4"
+          right="4"
+          display="flex"
+          gap="2"
+          opacity={isMouseActive ? 1 : 0}
+          transition="opacity 0.3s ease-in-out"
+        >
+          <IconButton
+            aria-label="Toggle fullscreen"
+            rounded="full"
+            size="lg"
+            shadow="lg"
+            onClick={() => {
+              if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+              } else {
+                document
+                  .exitFullscreen()
+                  .then(() => {
+                    document.body.style.cursor = 'default';
+                  })
+                  .catch(() => {});
+              }
+            }}
           >
-            <IconButton as="div" aria-label="Settings" rounded="full" size="lg" shadow="lg">
-              <LucideSettings />
-            </IconButton>
-          </PopoverTrigger>
-          <PopoverContent>
-            <PopoverBody>
-              <PopoverTitle>
-                <Heading as="h2">Settings</Heading>
-              </PopoverTitle>
-              <Settings />
-            </PopoverBody>
-          </PopoverContent>
-        </PopoverRoot>
+            {!document.fullscreenElement ? <LucideMaximize2 /> : <LucideMinimize2 />}
+          </IconButton>
+
+          <PopoverRoot positioning={{ placement: 'top' }}>
+            <PopoverTrigger>
+              <IconButton as="div" aria-label="Settings" rounded="full" size="lg" shadow="lg">
+                <LucideSettings />
+              </IconButton>
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverBody>
+                <PopoverTitle>
+                  <Heading as="h2">Settings</Heading>
+                </PopoverTitle>
+                <Settings />
+              </PopoverBody>
+            </PopoverContent>
+          </PopoverRoot>
+        </HStack>
       </Box>
     </SettingsProvider>
   );
