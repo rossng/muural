@@ -84,6 +84,22 @@ export function Settings() {
         </Field>
       </HStack>
 
+      <Field label="Exp. Head Joint">
+        <NumberInputRoot
+          value={settings.brick.expectedHeadJointWidth.toString()}
+          onValueChange={({ valueAsNumber }: { valueAsNumber: number }) => {
+            updateSettings({
+              brick: {
+                ...settings.brick,
+                expectedHeadJointWidth: isNaN(valueAsNumber) ? 10 : valueAsNumber,
+              },
+            });
+          }}
+        >
+          <NumberInputField />
+        </NumberInputRoot>
+      </Field>
+
       <Field label="Min. Head Joint">
         <NumberInputRoot
           value={settings.minHeadJointWidth.toString()}
