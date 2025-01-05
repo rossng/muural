@@ -21,7 +21,7 @@ export const DEFAULT_SETTINGS: () => Settings = () => ({
   minHeadJointWidth: 10,
   brick: WAAL,
   mortarColour: '#ccc',
-  brickShadow: false,
+  brickShadow: true,
 });
 
 interface SettingsContextType {
