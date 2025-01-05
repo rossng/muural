@@ -64,18 +64,7 @@ export const Wall: React.FC = () => {
             backgroundColor: brick.colour,
             textAlign: 'center',
           }}
-        >
-          <div
-            style={{
-              color: '#fff',
-              fontFamily: 'sans-serif',
-              fontSize: '10px',
-              marginTop: '10px',
-            }}
-          >
-            {brick.width}
-          </div>
-        </div>
+        />
       ))}
     </div>
   );
