@@ -1,6 +1,16 @@
-import { Box, Heading, HStack, IconButton } from '@chakra-ui/react';
-import { LucideMaximize2, LucideMinimize2, LucideSettings } from 'lucide-react';
+import { Box, Heading, HStack, IconButton, Link, Text, VStack } from '@chakra-ui/react';
+import { SiGithub } from '@icons-pack/react-simple-icons';
+import { LucideInfo, LucideMaximize2, LucideMinimize2, LucideSettings } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import {
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
+} from './components/ui/dialog';
 import {
   PopoverBody,
   PopoverContent,
@@ -15,7 +25,8 @@ import { Wall } from './Wall';
 
 function App() {
   const isMouseActive = useMouseActivity();
-  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [infoOpen, setInfoOpen] = useState(false);
 
   useEffect(() => {
     document.onfullscreenchange = () => {
@@ -27,9 +38,9 @@ function App() {
 
   useEffect(() => {
     if (document.fullscreenElement) {
-      document.body.style.cursor = isMouseActive || popoverOpen ? 'default' : 'none';
+      document.body.style.cursor = isMouseActive || settingsOpen ? 'default' : 'none';
     }
-  }, [isMouseActive, popoverOpen]);
+  }, [isMouseActive, settingsOpen]);
 
   return (
     <SettingsProvider>
@@ -44,9 +55,48 @@ function App() {
           right="4"
           display="flex"
           gap="2"
-          opacity={isMouseActive || popoverOpen ? 1 : 0}
+          opacity={isMouseActive || settingsOpen ? 1 : 0}
           transition="opacity 0.3s ease-in-out"
         >
+          <DialogRoot lazyMount open={infoOpen} onOpenChange={(e) => setInfoOpen(e.open)}>
+            <DialogTrigger asChild>
+              <IconButton
+                aria-label="About"
+                rounded="full"
+                size="lg"
+                shadow="lg"
+                onClick={() => {}}
+              >
+                <LucideInfo />
+              </IconButton>
+            </DialogTrigger>
+
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>About</DialogTitle>
+              </DialogHeader>
+              <DialogBody>
+                <VStack spaceY={2} alignItems="flex-start">
+                  <Text>A small experiment in generating brick wall bonds.</Text>
+                  <Text>Not all bonds are accurate (and they are of course only in 2D).</Text>
+                  <Link
+                    href="https://github.com/rossng/muural"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    display="flex"
+                    alignItems="center"
+                    alignSelf="center"
+                    gap={2}
+                    title="View source on GitHub"
+                  >
+                    <SiGithub />
+                  </Link>
+                </VStack>
+              </DialogBody>
+              <DialogCloseTrigger />
+            </DialogContent>
+          </DialogRoot>
+
           <IconButton
             aria-label="Toggle fullscreen"
             rounded="full"
@@ -70,7 +120,7 @@ function App() {
 
           <PopoverRoot
             positioning={{ placement: 'top' }}
-            onOpenChange={({ open }) => setPopoverOpen(open)}
+            onOpenChange={({ open }) => setSettingsOpen(open)}
           >
             <PopoverTrigger>
               <IconButton as="div" aria-label="Settings" rounded="full" size="lg" shadow="lg">
