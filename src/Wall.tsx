@@ -3,8 +3,9 @@ import { parseColor } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 import { Bond, Grid, makeFixedCourse, makeReferenceCourse } from './Bond';
 import { BaseBrick, totalLogicalWidth } from './Brick';
-import { courseToDrawable, DrawableBrick } from './Render';
 import { BOND_TYPES } from './data/Bonds';
+import { courseToDrawable, DrawableBrick } from './Render';
+import { darkenByBrickSize, makeRandomSequence, offsetColorRandomly } from './Util';
 
 export const Wall: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -46,6 +47,8 @@ export const Wall: React.FC = () => {
     .withChannelValue('lightness', 50)
     .toString('rgba');
 
+  const randomSequence = makeRandomSequence();
+
   return (
     <div
       ref={containerRef}
@@ -67,7 +70,10 @@ export const Wall: React.FC = () => {
             width: brick.width,
             height: brick.height,
             border: 'none',
-            backgroundColor: brick.colour,
+            backgroundColor: offsetColorRandomly(
+              darkenByBrickSize(parseColor(brick.colour), brick.width, settings.brick.width),
+              randomSequence,
+            ).toString('rgba'),
             textAlign: 'center',
             boxShadow: settings.brickShadow
               ? `2px 1px 1px ${shadowColour},
