@@ -26,3 +26,24 @@ export const FLEMISH_BOND = (brick: BaseBrick): Bond => ({
     },
   ],
 });
+
+export const ENGLISH_BOND = (brick: BaseBrick): Bond => ({
+  courses: [
+    {
+      offsetFraction: 0,
+      bricks: [wholeBrick(brick)],
+    },
+    {
+      offsetFraction: 0.25,
+      bricks: [cutBrick(brick, 1 / 2)],
+    },
+  ],
+});
+
+export const BOND_TYPES = {
+  ['Flemish']: FLEMISH_BOND,
+  ['Stretcher']: STRETCHER_BOND,
+  ['English']: ENGLISH_BOND,
+};
+
+export type BondType = keyof typeof BOND_TYPES;

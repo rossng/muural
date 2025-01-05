@@ -1,10 +1,4 @@
-import { Field } from '@/components/ui/field';
-import { NumberInputField, NumberInputRoot } from '@/components/ui/number-input';
-import { Radio, RadioGroup } from '@/components/ui/radio';
-import { Switch } from '@/components/ui/switch';
-import { useSettings } from '@/contexts/SettingsContext';
-import { HStack, parseColor, VStack } from '@chakra-ui/react';
-import { Button } from './components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
   ColorPickerArea,
   ColorPickerContent,
@@ -15,7 +9,21 @@ import {
   ColorPickerRoot,
   ColorPickerSliders,
   ColorPickerTrigger,
-} from './components/ui/color-picker';
+} from '@/components/ui/color-picker';
+import { Field } from '@/components/ui/field';
+import { NumberInputField, NumberInputRoot } from '@/components/ui/number-input';
+import {
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectRoot,
+  SelectTrigger,
+  SelectValueText,
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { useSettings } from '@/contexts/SettingsContext';
+import { createListCollection, HStack, parseColor, VStack } from '@chakra-ui/react';
+import { BOND_TYPES, BondType } from './data/Bonds';
 
 export function Settings() {
   const { settings, updateSettings, resetSettings } = useSettings();
@@ -23,19 +31,23 @@ export function Settings() {
   return (
     <VStack align="stretch" maxHeight="50vh" overflowY="auto">
       <Field label="Bond Type">
-        <RadioGroup
-          value={settings.bond}
-          onValueChange={({ value }) => {
-            updateSettings({
-              bond: value as unknown as 'flemish' | 'stretcher',
-            });
-          }}
+        <SelectRoot
+          collection={bonds}
+          value={[settings.bond]}
+          onValueChange={(e) => updateSettings({ bond: e.value[0] as BondType })}
         >
-          <VStack align="start">
-            <Radio value="stretcher">Stretcher Bond</Radio>
-            <Radio value="flemish">Flemish Bond</Radio>
-          </VStack>
-        </RadioGroup>
+          <SelectLabel>Bond</SelectLabel>
+          <SelectTrigger>
+            <SelectValueText placeholder="Select movie" />
+          </SelectTrigger>
+          <SelectContent>
+            {bonds.items.map((bond) => (
+              <SelectItem item={bond} key={bond.value}>
+                {bond.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </SelectRoot>
       </Field>
 
       <HStack>
@@ -155,3 +167,10 @@ export function Settings() {
     </VStack>
   );
 }
+
+const bonds = createListCollection({
+  items: Object.keys(BOND_TYPES).map((key) => ({
+    label: key,
+    value: key,
+  })),
+});

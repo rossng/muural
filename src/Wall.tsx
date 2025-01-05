@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Bond, Grid, makeFixedCourse, makeReferenceCourse } from './Bond';
 import { BaseBrick, totalLogicalWidth } from './Brick';
 import { courseToDrawable, DrawableBrick } from './Render';
-import { FLEMISH_BOND, STRETCHER_BOND } from './data/Bonds';
+import { BOND_TYPES } from './data/Bonds';
 
 export const Wall: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -109,8 +109,8 @@ function makeWall(bond: Bond, grid: Grid, width: number, height: number): Drawab
   return allBricks;
 }
 
-function makeBond(bond: 'flemish' | 'stretcher', brick: BaseBrick): Bond {
-  return bond === 'flemish' ? FLEMISH_BOND(brick) : STRETCHER_BOND(brick);
+function makeBond(bond: keyof typeof BOND_TYPES, brick: BaseBrick): Bond {
+  return BOND_TYPES[bond](brick);
 }
 
 function makeGrid(settings: Settings): Grid {

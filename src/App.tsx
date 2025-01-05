@@ -1,6 +1,6 @@
 import { Box, Heading, HStack, IconButton } from '@chakra-ui/react';
 import { LucideMaximize2, LucideMinimize2, LucideSettings } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   PopoverBody,
   PopoverContent,
@@ -15,6 +15,7 @@ import { Wall } from './Wall';
 
 function App() {
   const isMouseActive = useMouseActivity();
+  const [popoverOpen, setPopoverOpen] = useState(false);
 
   useEffect(() => {
     document.onfullscreenchange = () => {
@@ -26,9 +27,9 @@ function App() {
 
   useEffect(() => {
     if (document.fullscreenElement) {
-      document.body.style.cursor = isMouseActive ? 'default' : 'none';
+      document.body.style.cursor = isMouseActive || popoverOpen ? 'default' : 'none';
     }
-  }, [isMouseActive]);
+  }, [isMouseActive, popoverOpen]);
 
   return (
     <SettingsProvider>
@@ -43,7 +44,7 @@ function App() {
           right="4"
           display="flex"
           gap="2"
-          opacity={isMouseActive ? 1 : 0}
+          opacity={isMouseActive || popoverOpen ? 1 : 0}
           transition="opacity 0.3s ease-in-out"
         >
           <IconButton
@@ -67,13 +68,16 @@ function App() {
             {!document.fullscreenElement ? <LucideMaximize2 /> : <LucideMinimize2 />}
           </IconButton>
 
-          <PopoverRoot positioning={{ placement: 'top' }}>
+          <PopoverRoot
+            positioning={{ placement: 'top' }}
+            onOpenChange={({ open }) => setPopoverOpen(open)}
+          >
             <PopoverTrigger>
               <IconButton as="div" aria-label="Settings" rounded="full" size="lg" shadow="lg">
                 <LucideSettings />
               </IconButton>
             </PopoverTrigger>
-            <PopoverContent>
+            <PopoverContent zIndex={900}>
               <PopoverBody>
                 <PopoverTitle>
                   <Heading as="h2">Settings</Heading>

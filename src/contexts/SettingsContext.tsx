@@ -1,4 +1,5 @@
 import { BaseBrick } from '@/Brick';
+import { BOND_TYPES } from '@/data/Bonds';
 import { WAAL } from '@/data/Bricks';
 import { createContext, useContext } from 'react';
 
@@ -6,7 +7,7 @@ export interface Settings {
   wallWidth: number;
   wallHeight: number;
   courseHeight: number;
-  bond: 'flemish' | 'stretcher';
+  bond: keyof typeof BOND_TYPES;
   minHeadJointWidth: number;
   brick: BaseBrick;
   mortarColour: string;
@@ -17,7 +18,7 @@ export const DEFAULT_SETTINGS: () => Settings = () => ({
   wallWidth: 1000,
   wallHeight: 800,
   courseHeight: 62.5,
-  bond: 'flemish',
+  bond: 'Flemish',
   minHeadJointWidth: 10,
   brick: WAAL,
   mortarColour: '#ccc',
