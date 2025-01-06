@@ -13,6 +13,7 @@ export interface Settings {
   mortarColour: string;
   brickShadow: boolean;
   zoom: number;
+  colourBricksBySize: boolean;
 }
 
 export const DEFAULT_SETTINGS: () => Settings = () => ({
@@ -25,6 +26,7 @@ export const DEFAULT_SETTINGS: () => Settings = () => ({
   mortarColour: '#ccc',
   brickShadow: true,
   zoom: 0.5,
+  colourBricksBySize: true,
 });
 
 export function loadStoredSettings(): Settings | null {

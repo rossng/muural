@@ -78,7 +78,9 @@ export const Wall: React.FC = () => {
             height: brick.height * settings.zoom,
             border: 'none',
             backgroundColor: offsetColorRandomly(
-              darkenByBrickSize(parseColor(brick.colour), brick.width, settings.brick.width),
+              settings.colourBricksBySize
+                ? darkenByBrickSize(parseColor(brick.colour), brick.width, settings.brick.width)
+                : parseColor(brick.colour),
               randomSequence,
             ).toString('rgba'),
             textAlign: 'center',

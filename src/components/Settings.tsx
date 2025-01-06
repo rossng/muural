@@ -186,12 +186,21 @@ export function Settings() {
           </ColorPickerRoot>
         </Field>
       </HStack>
-      <Field label="Brick Shadow">
-        <Switch
-          checked={settings.brickShadow}
-          onCheckedChange={({ checked }) => updateSettings({ brickShadow: checked })}
-        />
-      </Field>
+      <HStack>
+        <Field label="Brick Shadow">
+          <Switch
+            checked={settings.brickShadow}
+            onCheckedChange={({ checked }) => updateSettings({ brickShadow: checked })}
+          />
+        </Field>
+        <Field label="Brick Colour By Size">
+          <Switch
+            checked={settings.colourBricksBySize}
+            onCheckedChange={({ checked }) => updateSettings({ colourBricksBySize: checked })}
+          />
+        </Field>
+      </HStack>
+
       <Button onClick={resetSettings} size="2xs">
         Reset
       </Button>
