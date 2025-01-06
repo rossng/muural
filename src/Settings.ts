@@ -1,6 +1,7 @@
 import { BaseBrick } from '@/Brick';
 import { BOND_TYPES } from '@/data/Bonds';
 import { WAAL } from '@/data/Bricks';
+import { assign } from 'radashi';
 
 export interface Settings {
   wallWidth: number;
@@ -53,7 +54,7 @@ export function parseShareUrl(url: string): Settings | null {
   try {
     const decoded = atob(decodeURIComponent(share));
     const settings = JSON.parse(decoded) as Settings;
-    return settings;
+    return assign(DEFAULT_SETTINGS(), settings);
   } catch {
     return null;
   }
