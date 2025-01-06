@@ -23,7 +23,7 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { useSettings } from '@/contexts/SettingsContext';
 import { createListCollection, HStack, parseColor, VStack } from '@chakra-ui/react';
-import { BOND_TYPES, BondType } from './data/Bonds';
+import { BOND_TYPES, BondType } from '../data/Bonds';
 
 export function Settings() {
   const { settings, updateSettings, resetSettings } = useSettings();

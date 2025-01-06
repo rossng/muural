@@ -2,6 +2,8 @@ import { Box, Heading, HStack, IconButton, Link, Text, VStack } from '@chakra-ui
 import { SiGithub } from '@icons-pack/react-simple-icons';
 import { LucideInfo, LucideMaximize2, LucideMinimize2, LucideSettings } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { Settings } from './components/Settings';
+import { Share } from './components/Share';
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -18,11 +20,9 @@ import {
   PopoverTitle,
   PopoverTrigger,
 } from './components/ui/popover';
+import { Wall } from './components/Wall';
 import { SettingsProvider } from './contexts/SettingsProvider';
 import { useMouseActivity } from './hooks/useMouseActivity';
-import { Settings } from './Settings';
-import { Share } from './Share';
-import { Wall } from './Wall';
 
 function App() {
   const isMouseActive = useMouseActivity();

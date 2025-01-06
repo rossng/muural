@@ -1,11 +1,12 @@
-import { Settings, useSettings } from '@/contexts/SettingsContext';
+import { useSettings } from '@/contexts/SettingsContext';
 import { parseColor } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
-import { Bond, Grid, makeFixedCourse, makeReferenceCourse } from './Bond';
-import { BaseBrick, totalLogicalWidth } from './Brick';
-import { BOND_TYPES } from './data/Bonds';
-import { courseToDrawable, DrawableBrick } from './Render';
-import { darkenByBrickSize, makeRandomSequence, offsetColorRandomly } from './Util';
+import { Bond, Grid, makeFixedCourse, makeReferenceCourse } from '../Bond';
+import { BaseBrick, totalLogicalWidth } from '../Brick';
+import { BOND_TYPES } from '../data/Bonds';
+import { courseToDrawable, DrawableBrick } from '../Render';
+import { Settings } from '../Settings';
+import { darkenByBrickSize, makeRandomSequence, offsetColorRandomly } from '../Util';
 
 export const Wall: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);

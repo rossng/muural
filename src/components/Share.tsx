@@ -1,15 +1,11 @@
 import { IconButton } from '@chakra-ui/react';
 import { LucideShare2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import {
-  ClipboardIconButton,
-  ClipboardInput,
-  ClipboardLabel,
-  ClipboardRoot,
-} from './components/ui/clipboard';
-import { InputGroup } from './components/ui/input-group';
-import { PopoverBody, PopoverContent, PopoverRoot, PopoverTrigger } from './components/ui/popover';
-import { parseShareUrl, settingsToShareUrl, useSettings } from './contexts/SettingsContext';
+import { parseShareUrl, settingsToShareUrl } from '../Settings';
+import { useSettings } from '../contexts/SettingsContext';
+import { ClipboardIconButton, ClipboardInput, ClipboardLabel, ClipboardRoot } from './ui/clipboard';
+import { InputGroup } from './ui/input-group';
+import { PopoverBody, PopoverContent, PopoverRoot, PopoverTrigger } from './ui/popover';
 
 export function Share() {
   const [shareUrl, setShareUrl] = useState<string>('');

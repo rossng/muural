@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { DEFAULT_SETTINGS, Settings, SettingsContext, loadStoredSettings } from './SettingsContext';
+import { DEFAULT_SETTINGS, loadStoredSettings, Settings } from '../Settings';
+import { SettingsContext } from './SettingsContext';
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<Settings>(() => {
