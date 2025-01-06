@@ -8,8 +8,13 @@ import { courseToDrawable, DrawableBrick } from '../Render';
 import { Settings } from '../Settings';
 import { darkenByBrickSize, makeRandomSequence, offsetColorRandomly } from '../Util';
 
-export const Wall: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
+interface WallProps {
+  containerRef?: React.RefObject<HTMLDivElement | null>;
+}
+
+export const Wall: React.FC<WallProps> = ({ containerRef: externalRef }) => {
+  const internalRef = useRef<HTMLDivElement>(null);
+  const containerRef = externalRef || internalRef;
   const [bricks, setBricks] = useState<DrawableBrick[]>([]);
   const { settings } = useSettings();
 

@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import {
   ColorPickerArea,
   ColorPickerContent,
@@ -26,7 +25,7 @@ import { BOND_TYPES, BondType } from '../data/Bonds';
 import { StepperInput } from './ui/stepper-input';
 
 export function Settings() {
-  const { settings, updateSettings, resetSettings } = useSettings();
+  const { settings, updateSettings } = useSettings();
 
   return (
     <VStack align="stretch" maxHeight="50vh" overflowY="auto">
@@ -200,10 +199,6 @@ export function Settings() {
           />
         </Field>
       </HStack>
-
-      <Button onClick={resetSettings} size="2xs">
-        Reset
-      </Button>
     </VStack>
   );
 }

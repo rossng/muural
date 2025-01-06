@@ -1,7 +1,9 @@
 import { Box, Heading, HStack, IconButton, Link, Text, VStack } from '@chakra-ui/react';
 import { SiGithub } from '@icons-pack/react-simple-icons';
 import { LucideInfo, LucideMaximize2, LucideMinimize2, LucideSettings } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { DownloadWall } from './components/DownloadWall';
+import { ResetSettings } from './components/ResetSettings';
 import { Settings } from './components/Settings';
 import { Share } from './components/Share';
 import {
@@ -20,6 +22,7 @@ import {
   PopoverTitle,
   PopoverTrigger,
 } from './components/ui/popover';
+import { Tooltip } from './components/ui/tooltip';
 import { Wall } from './components/Wall';
 import { SettingsProvider } from './contexts/SettingsProvider';
 import { useMouseActivity } from './hooks/useMouseActivity';
@@ -28,6 +31,7 @@ function App() {
   const isMouseActive = useMouseActivity();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
+  const wallRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     document.onfullscreenchange = () => {
@@ -47,7 +51,7 @@ function App() {
     <SettingsProvider>
       <Box width="100%" height="100%">
         <Box position="absolute" top="0" left="0" width="100vw" height="100vh">
-          <Wall />
+          <Wall containerRef={wallRef} />
         </Box>
 
         <HStack
@@ -59,18 +63,22 @@ function App() {
           opacity={isMouseActive || settingsOpen ? 1 : 0}
           transition="opacity 0.3s ease-in-out"
         >
+          <DownloadWall wallRef={wallRef} />
+
           <DialogRoot lazyMount open={infoOpen} onOpenChange={(e) => setInfoOpen(e.open)}>
-            <DialogTrigger asChild>
-              <IconButton
-                aria-label="About"
-                rounded="full"
-                size="lg"
-                shadow="lg"
-                onClick={() => {}}
-              >
-                <LucideInfo />
-              </IconButton>
-            </DialogTrigger>
+            <Tooltip content="About this app">
+              <DialogTrigger asChild>
+                <IconButton
+                  aria-label="About"
+                  rounded="full"
+                  size="lg"
+                  shadow="lg"
+                  onClick={() => {}}
+                >
+                  <LucideInfo />
+                </IconButton>
+              </DialogTrigger>
+            </Tooltip>
 
             <DialogContent>
               <DialogHeader>
@@ -98,26 +106,28 @@ function App() {
             </DialogContent>
           </DialogRoot>
 
-          <IconButton
-            aria-label="Toggle fullscreen"
-            rounded="full"
-            size="lg"
-            shadow="lg"
-            onClick={() => {
-              if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(() => {});
-              } else {
-                document
-                  .exitFullscreen()
-                  .then(() => {
-                    document.body.style.cursor = 'default';
-                  })
-                  .catch(() => {});
-              }
-            }}
-          >
-            {!document.fullscreenElement ? <LucideMaximize2 /> : <LucideMinimize2 />}
-          </IconButton>
+          <Tooltip content="Toggle fullscreen">
+            <IconButton
+              aria-label="Toggle fullscreen"
+              rounded="full"
+              size="lg"
+              shadow="lg"
+              onClick={() => {
+                if (!document.fullscreenElement) {
+                  document.documentElement.requestFullscreen().catch(() => {});
+                } else {
+                  document
+                    .exitFullscreen()
+                    .then(() => {
+                      document.body.style.cursor = 'default';
+                    })
+                    .catch(() => {});
+                }
+              }}
+            >
+              {!document.fullscreenElement ? <LucideMaximize2 /> : <LucideMinimize2 />}
+            </IconButton>
+          </Tooltip>
 
           <Share />
 
@@ -126,14 +136,19 @@ function App() {
             onOpenChange={({ open }) => setSettingsOpen(open)}
           >
             <PopoverTrigger>
-              <IconButton as="div" aria-label="Settings" rounded="full" size="lg" shadow="lg">
-                <LucideSettings />
-              </IconButton>
+              <Tooltip content="Settings">
+                <IconButton as="div" aria-label="Settings" rounded="full" size="lg" shadow="lg">
+                  <LucideSettings />
+                </IconButton>
+              </Tooltip>
             </PopoverTrigger>
             <PopoverContent zIndex={900}>
               <PopoverBody>
                 <PopoverTitle>
-                  <Heading as="h2">Settings</Heading>
+                  <HStack justifyContent="space-between">
+                    <Heading as="h2">Settings</Heading>
+                    <ResetSettings />
+                  </HStack>
                 </PopoverTitle>
                 <Settings />
               </PopoverBody>

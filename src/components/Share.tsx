@@ -6,6 +6,7 @@ import { useSettings } from '../contexts/SettingsContext';
 import { ClipboardIconButton, ClipboardInput, ClipboardLabel, ClipboardRoot } from './ui/clipboard';
 import { InputGroup } from './ui/input-group';
 import { PopoverBody, PopoverContent, PopoverRoot, PopoverTrigger } from './ui/popover';
+import { Tooltip } from './ui/tooltip';
 
 export function Share() {
   const [shareUrl, setShareUrl] = useState<string>('');
@@ -27,16 +28,18 @@ export function Share() {
   return (
     <PopoverRoot positioning={{ placement: 'top' }}>
       <PopoverTrigger>
-        <IconButton
-          as="div"
-          aria-label="Share"
-          rounded="full"
-          size="lg"
-          shadow="lg"
-          onClick={() => setShareUrl(settingsToShareUrl(settings))}
-        >
-          <LucideShare2 />
-        </IconButton>
+        <Tooltip content="Share wall">
+          <IconButton
+            as="div"
+            aria-label="Share"
+            rounded="full"
+            size="lg"
+            shadow="lg"
+            onClick={() => setShareUrl(settingsToShareUrl(settings))}
+          >
+            <LucideShare2 />
+          </IconButton>
+        </Tooltip>
       </PopoverTrigger>
       <PopoverContent zIndex={900}>
         <PopoverBody>
