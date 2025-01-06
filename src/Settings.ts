@@ -12,6 +12,7 @@ export interface Settings {
   brick: BaseBrick;
   mortarColour: string;
   brickShadow: boolean;
+  zoom: number;
 }
 
 export const DEFAULT_SETTINGS: () => Settings = () => ({
@@ -23,6 +24,7 @@ export const DEFAULT_SETTINGS: () => Settings = () => ({
   brick: WAAL,
   mortarColour: '#ccc',
   brickShadow: true,
+  zoom: 0.5,
 });
 
 export function loadStoredSettings(): Settings | null {
@@ -30,7 +32,7 @@ export function loadStoredSettings(): Settings | null {
   if (!stored) return null;
 
   try {
-    return JSON.parse(stored) as Settings;
+    return combineWithDefault(JSON.parse(stored) as Settings);
   } catch {
     return null;
   }
@@ -54,8 +56,12 @@ export function parseShareUrl(url: string): Settings | null {
   try {
     const decoded = atob(decodeURIComponent(share));
     const settings = JSON.parse(decoded) as Settings;
-    return assign(DEFAULT_SETTINGS(), settings);
+    return combineWithDefault(settings);
   } catch {
     return null;
   }
+}
+
+export function combineWithDefault(settings: Settings): Settings {
+  return assign(DEFAULT_SETTINGS(), settings);
 }

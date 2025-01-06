@@ -15,7 +15,6 @@ import { NumberInputField, NumberInputRoot } from '@/components/ui/number-input'
 import {
   SelectContent,
   SelectItem,
-  SelectLabel,
   SelectRoot,
   SelectTrigger,
   SelectValueText,
@@ -24,21 +23,32 @@ import { Switch } from '@/components/ui/switch';
 import { useSettings } from '@/contexts/SettingsContext';
 import { createListCollection, HStack, parseColor, VStack } from '@chakra-ui/react';
 import { BOND_TYPES, BondType } from '../data/Bonds';
+import { StepperInput } from './ui/stepper-input';
 
 export function Settings() {
   const { settings, updateSettings, resetSettings } = useSettings();
 
   return (
     <VStack align="stretch" maxHeight="50vh" overflowY="auto">
+      <Field label="Zoom">
+        <StepperInput
+          variant="subtle"
+          size="xs"
+          value={`${settings.zoom * 100}`}
+          min={10}
+          max={100}
+          step={10}
+          onValueChange={({ valueAsNumber }) => updateSettings({ zoom: valueAsNumber / 100 })}
+        />
+      </Field>
       <Field label="Bond Type">
         <SelectRoot
           collection={bonds}
           value={[settings.bond]}
           onValueChange={(e) => updateSettings({ bond: e.value[0] as BondType })}
         >
-          <SelectLabel>Bond</SelectLabel>
           <SelectTrigger>
-            <SelectValueText placeholder="Select movie" />
+            <SelectValueText placeholder="Select bond" />
           </SelectTrigger>
           <SelectContent>
             {bonds.items.map((bond) => (
@@ -84,34 +94,36 @@ export function Settings() {
         </Field>
       </HStack>
 
-      <Field label="Exp. Head Joint">
-        <NumberInputRoot
-          value={settings.brick.expectedHeadJointWidth.toString()}
-          onValueChange={({ valueAsNumber }: { valueAsNumber: number }) => {
-            updateSettings({
-              brick: {
-                ...settings.brick,
-                expectedHeadJointWidth: isNaN(valueAsNumber) ? 10 : valueAsNumber,
-              },
-            });
-          }}
-        >
-          <NumberInputField />
-        </NumberInputRoot>
-      </Field>
+      <HStack>
+        <Field label="Exp. Head Joint">
+          <NumberInputRoot
+            value={settings.brick.expectedHeadJointWidth.toString()}
+            onValueChange={({ valueAsNumber }: { valueAsNumber: number }) => {
+              updateSettings({
+                brick: {
+                  ...settings.brick,
+                  expectedHeadJointWidth: isNaN(valueAsNumber) ? 10 : valueAsNumber,
+                },
+              });
+            }}
+          >
+            <NumberInputField />
+          </NumberInputRoot>
+        </Field>
 
-      <Field label="Min. Head Joint">
-        <NumberInputRoot
-          value={settings.minHeadJointWidth.toString()}
-          onValueChange={({ valueAsNumber }: { valueAsNumber: number }) => {
-            updateSettings({
-              minHeadJointWidth: isNaN(valueAsNumber) ? 10 : valueAsNumber,
-            });
-          }}
-        >
-          <NumberInputField />
-        </NumberInputRoot>
-      </Field>
+        <Field label="Min. Head Joint">
+          <NumberInputRoot
+            value={settings.minHeadJointWidth.toString()}
+            onValueChange={({ valueAsNumber }: { valueAsNumber: number }) => {
+              updateSettings({
+                minHeadJointWidth: isNaN(valueAsNumber) ? 10 : valueAsNumber,
+              });
+            }}
+          >
+            <NumberInputField />
+          </NumberInputRoot>
+        </Field>
+      </HStack>
 
       <Field label="Course Height">
         <NumberInputRoot
@@ -122,55 +134,58 @@ export function Settings() {
             });
           }}
           step={0.5}
+          width="100%"
         >
           <NumberInputField />
         </NumberInputRoot>
       </Field>
-      <Field label="Brick Colour">
-        <ColorPickerRoot
-          value={parseColor(settings.brick.colour)}
-          onValueChange={(value) =>
-            updateSettings({
-              brick: {
-                ...settings.brick,
-                colour: value.valueAsString,
-              },
-            })
-          }
-        >
-          <ColorPickerLabel />
-          <ColorPickerControl>
-            <ColorPickerInput />
-            <ColorPickerTrigger />
-          </ColorPickerControl>
-          <ColorPickerContent>
-            <ColorPickerArea />
-            <ColorPickerEyeDropper />
-            <ColorPickerSliders />
-          </ColorPickerContent>
-        </ColorPickerRoot>
-      </Field>
-      <Field label="Mortar Colour">
-        <ColorPickerRoot
-          value={parseColor(settings.mortarColour)}
-          onValueChange={(value) =>
-            updateSettings({
-              mortarColour: value.valueAsString,
-            })
-          }
-        >
-          <ColorPickerLabel />
-          <ColorPickerControl>
-            <ColorPickerInput />
-            <ColorPickerTrigger />
-          </ColorPickerControl>
-          <ColorPickerContent>
-            <ColorPickerArea />
-            <ColorPickerEyeDropper />
-            <ColorPickerSliders />
-          </ColorPickerContent>
-        </ColorPickerRoot>
-      </Field>
+      <HStack>
+        <Field label="Brick Colour">
+          <ColorPickerRoot
+            value={parseColor(settings.brick.colour)}
+            onValueChange={(value) =>
+              updateSettings({
+                brick: {
+                  ...settings.brick,
+                  colour: value.valueAsString,
+                },
+              })
+            }
+          >
+            <ColorPickerLabel />
+            <ColorPickerControl>
+              <ColorPickerInput />
+              <ColorPickerTrigger />
+            </ColorPickerControl>
+            <ColorPickerContent>
+              <ColorPickerArea />
+              <ColorPickerEyeDropper />
+              <ColorPickerSliders />
+            </ColorPickerContent>
+          </ColorPickerRoot>
+        </Field>
+        <Field label="Mortar Colour">
+          <ColorPickerRoot
+            value={parseColor(settings.mortarColour)}
+            onValueChange={(value) =>
+              updateSettings({
+                mortarColour: value.valueAsString,
+              })
+            }
+          >
+            <ColorPickerLabel />
+            <ColorPickerControl>
+              <ColorPickerInput />
+              <ColorPickerTrigger />
+            </ColorPickerControl>
+            <ColorPickerContent>
+              <ColorPickerArea />
+              <ColorPickerEyeDropper />
+              <ColorPickerSliders />
+            </ColorPickerContent>
+          </ColorPickerRoot>
+        </Field>
+      </HStack>
       <Field label="Brick Shadow">
         <Switch
           checked={settings.brickShadow}

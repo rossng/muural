@@ -17,8 +17,8 @@ export const Wall: React.FC = () => {
     const calculateBricks = () => {
       if (!containerRef.current) return;
 
-      const containerWidth = containerRef.current.clientWidth;
-      const containerHeight = containerRef.current.clientHeight;
+      const containerWidth = containerRef.current.clientWidth * (1 / settings.zoom);
+      const containerHeight = containerRef.current.clientHeight * (1 / settings.zoom);
 
       const allBricks = makeWall(
         makeBond(settings.bond, settings.brick),
@@ -66,10 +66,10 @@ export const Wall: React.FC = () => {
           key={i}
           style={{
             position: 'absolute',
-            left: brick.x,
-            top: brick.y,
-            width: brick.width,
-            height: brick.height,
+            left: brick.x * settings.zoom,
+            top: brick.y * settings.zoom,
+            width: brick.width * settings.zoom,
+            height: brick.height * settings.zoom,
             border: 'none',
             backgroundColor: offsetColorRandomly(
               darkenByBrickSize(parseColor(brick.colour), brick.width, settings.brick.width),
