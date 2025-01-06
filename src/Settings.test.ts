@@ -16,6 +16,8 @@ describe('Settings', () => {
       brick: WAAL,
       mortarColour: '#ccc',
       brickShadow: true,
+      colourBricksBySize: true,
+      zoom: 0.5,
     });
   });
 });
