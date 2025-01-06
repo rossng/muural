@@ -45,7 +45,13 @@ export const Wall: React.FC = () => {
 
   const shadowColour = parseColor(settings.mortarColour)
     .toFormat('hsla')
-    .withChannelValue('lightness', 50)
+    .withChannelValue(
+      'lightness',
+      Math.max(
+        parseColor(settings.mortarColour).toFormat('hsla').getChannelValue('lightness') - 30,
+        0,
+      ),
+    )
     .toString('rgba');
 
   const randomSequence = makeRandomSequence();
