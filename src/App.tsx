@@ -1,20 +1,11 @@
-import { Box, Heading, HStack, IconButton, Link, Text, VStack } from '@chakra-ui/react';
-import { SiGithub } from '@icons-pack/react-simple-icons';
-import { LucideInfo, LucideMaximize2, LucideMinimize2, LucideSettings } from 'lucide-react';
+import { Box, Heading, HStack, IconButton } from '@chakra-ui/react';
+import { LucideMaximize2, LucideMinimize2, LucideSettings } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { About } from './components/About';
 import { DownloadWall } from './components/DownloadWall';
 import { ResetSettings } from './components/ResetSettings';
 import { Settings } from './components/Settings';
 import { Share } from './components/Share';
-import {
-  DialogBody,
-  DialogCloseTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogRoot,
-  DialogTitle,
-  DialogTrigger,
-} from './components/ui/dialog';
 import {
   PopoverBody,
   PopoverContent,
@@ -30,7 +21,6 @@ import { useMouseActivity } from './hooks/useMouseActivity';
 function App() {
   const isMouseActive = useMouseActivity();
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [infoOpen, setInfoOpen] = useState(false);
   const wallRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -65,46 +55,7 @@ function App() {
         >
           <DownloadWall wallRef={wallRef} />
 
-          <DialogRoot lazyMount open={infoOpen} onOpenChange={(e) => setInfoOpen(e.open)}>
-            <Tooltip content="About this app">
-              <DialogTrigger asChild>
-                <IconButton
-                  aria-label="About"
-                  rounded="full"
-                  size="lg"
-                  shadow="lg"
-                  onClick={() => {}}
-                >
-                  <LucideInfo />
-                </IconButton>
-              </DialogTrigger>
-            </Tooltip>
-
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>About</DialogTitle>
-              </DialogHeader>
-              <DialogBody>
-                <VStack spaceY={2} alignItems="flex-start">
-                  <Text>A small experiment in generating brick wall bonds.</Text>
-                  <Text>Not all bonds are accurate (and they are of course only in 2D).</Text>
-                  <Link
-                    href="https://github.com/rossng/muural"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    display="flex"
-                    alignItems="center"
-                    alignSelf="center"
-                    gap={2}
-                    title="View source on GitHub"
-                  >
-                    <SiGithub />
-                  </Link>
-                </VStack>
-              </DialogBody>
-              <DialogCloseTrigger />
-            </DialogContent>
-          </DialogRoot>
+          <About />
 
           <Tooltip content="Toggle fullscreen">
             <IconButton
